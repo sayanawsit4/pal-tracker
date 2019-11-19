@@ -24,7 +24,7 @@ jobs:
       deploy:
         edge: true
         provider: releases
-        api_key: "da496092021f06db4a089a92f9ec406d3bf0c70d"
+        api_key: $GITHUB_OAUTH_TOKEN
         file: "build/libs/pal-tracker.jar"
         skip_cleanup: true
     - stage: deploy to cf
