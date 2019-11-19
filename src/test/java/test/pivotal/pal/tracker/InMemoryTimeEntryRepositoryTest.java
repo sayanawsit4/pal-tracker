@@ -6,8 +6,7 @@ import org.junit.Test;
 
 import java.time.LocalDate;
 import java.util.List;
-
-import static java.util.Arrays.asList;
+import static java.util.Arrays.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class InMemoryTimeEntryRepositoryTest {
@@ -17,9 +16,12 @@ public class InMemoryTimeEntryRepositoryTest {
 
         long projectId = 123L;
         long userId = 456L;
+
         TimeEntry createdTimeEntry = repo.create(new TimeEntry(projectId, userId, LocalDate.parse("2017-01-08"), 8));
 
         long timeEntryId = 1L;
+
+
         TimeEntry expected = new TimeEntry(timeEntryId, projectId, userId, LocalDate.parse("2017-01-08"), 8);
         assertThat(createdTimeEntry).isEqualTo(expected);
 
@@ -41,15 +43,15 @@ public class InMemoryTimeEntryRepositoryTest {
         assertThat(readEntry).isEqualTo(expected);
     }
 
-    @Test
-    public void find_MissingEntry() {
-        InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
+     @Test
+     public void find_MissingEntry() {
+         InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
 
-        long timeEntryId = 1L;
+         long timeEntryId = 1L;
 
-        TimeEntry readEntry = repo.find(timeEntryId);
-        assertThat(readEntry).isNull();
-    }
+         TimeEntry readEntry = repo.find(timeEntryId);
+         assertThat(readEntry).isNull();
+     }
 
     @Test
     public void list() throws Exception {
@@ -64,8 +66,10 @@ public class InMemoryTimeEntryRepositoryTest {
         assertThat(repo.list()).containsExactlyInAnyOrderElementsOf(expected);
     }
 
+
     @Test
     public void update() throws Exception {
+
         InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
         TimeEntry created = repo.create(new TimeEntry(123L, 456L, LocalDate.parse("2017-01-08"), 8));
 
@@ -81,13 +85,14 @@ public class InMemoryTimeEntryRepositoryTest {
     @Test
     public void update_MissingEntry() {
         InMemoryTimeEntryRepository repo = new InMemoryTimeEntryRepository();
-
+        long userId = 456L;
         TimeEntry updatedEntry = repo.update(
                 1L,
-                new TimeEntry(321L, 654L, LocalDate.parse("2017-01-09"), 5));
+                new TimeEntry(321L, 654L, userId,LocalDate.parse("2017-01-09"), 5));
 
         assertThat(updatedEntry).isNull();
     }
+
 
     @Test
     public void delete() throws Exception {
@@ -100,6 +105,7 @@ public class InMemoryTimeEntryRepositoryTest {
         repo.delete(created.getId());
         assertThat(repo.list()).isEmpty();
     }
+
 
     @Test
     public void deleteKeepsTrackOfLatestIdProperly() {
