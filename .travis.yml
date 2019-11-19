@@ -24,7 +24,7 @@ jobs:
       deploy:
         edge: true
         provider: releases
-        api_key: "6068f30a5b87e69267368530f2532e70786547da"
+        api_key: "38c6ad0aca383bdc015762000dd3ae09958b6ece"
         file: "build/libs/pal-tracker.jar"
         skip_cleanup: true
     - stage: deploy to cf
