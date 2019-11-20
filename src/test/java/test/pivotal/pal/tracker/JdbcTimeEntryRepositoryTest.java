@@ -18,11 +18,13 @@ import java.util.TimeZone;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class JdbcTimeEntryRepositoryTest {
+
     private TimeEntryRepository subject;
     private JdbcTemplate jdbcTemplate;
 
     @Before
     public void setUp() {
+
         MysqlDataSource dataSource = new MysqlDataSource();
         dataSource.setUrl(System.getenv("SPRING_DATASOURCE_URL"));
 
@@ -31,20 +33,24 @@ public class JdbcTimeEntryRepositoryTest {
         jdbcTemplate = new JdbcTemplate(dataSource);
         jdbcTemplate.execute("DELETE FROM time_entries");
 
+        System.out.print("load data in setup-----------" + jdbcTemplate.getMaxRows());
+
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
     @Test
     public void createInsertsATimeEntryRecord() {
+        System.out.print("load data -----------" + jdbcTemplate.getMaxRows());
+
         TimeEntry newTimeEntry = new TimeEntry(123, 321, LocalDate.parse("2017-01-09"), 8);
         TimeEntry entry = subject.create(newTimeEntry);
-
+        System.out.print("Entry is " + entry);
         Map<String, Object> foundEntry = jdbcTemplate.queryForMap("Select * from time_entries where id = ?", entry.getId());
 
         assertThat(foundEntry.get("id")).isEqualTo(entry.getId());
         assertThat(foundEntry.get("project_id")).isEqualTo(123L);
         assertThat(foundEntry.get("user_id")).isEqualTo(321L);
-        assertThat(((Date)foundEntry.get("date")).toLocalDate()).isEqualTo(LocalDate.parse("2017-01-09"));
+        assertThat(((Date) foundEntry.get("date")).toLocalDate()).isEqualTo(LocalDate.parse("2017-01-09"));
         assertThat(foundEntry.get("hours")).isEqualTo(8);
     }
 
@@ -140,7 +146,7 @@ public class JdbcTimeEntryRepositoryTest {
         assertThat(foundEntry.get("id")).isEqualTo(timeEntry.getId());
         assertThat(foundEntry.get("project_id")).isEqualTo(456L);
         assertThat(foundEntry.get("user_id")).isEqualTo(322L);
-        assertThat(((Date)foundEntry.get("date")).toLocalDate()).isEqualTo(LocalDate.parse("2017-01-10"));
+        assertThat(((Date) foundEntry.get("date")).toLocalDate()).isEqualTo(LocalDate.parse("2017-01-10"));
         assertThat(foundEntry.get("hours")).isEqualTo(10);
     }
 
